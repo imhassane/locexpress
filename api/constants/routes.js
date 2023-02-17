@@ -7,6 +7,9 @@ module.exports = {
     properties: {
         root: '/properties',
         GET_ALL: '/',
+        GET_ONE: '/:id/details',
+        DELETE: '/:id/delete',
+        UPDATE: '/:id/update',
         CREATE: '/'
     }
 }

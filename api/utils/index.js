@@ -1,3 +1,24 @@
+const constants = require("../constants");
+
+const formatStatus = code => {
+    let status;
+    switch (code) {
+        case constants.STATES.AVAILABLE:
+            status = 'AVAILABLE';
+            break;
+        case constants.STATES.DELETED:
+            status = 'DELETED';
+            break;
+        case constants.STATES.UNAVAILABLE:
+            status = 'UNAVAILABLE';
+            break;
+        default:
+            status = 'UNDEFINED';
+            break;
+    }
+    return status;
+}
+
 exports.returnData = data => ({ data })
 
 exports.returnError = error => ({ error })
@@ -42,7 +63,7 @@ exports.formatToDbProperty = property => {
     if (keys.hasLaundry) data.pro_has_laundry = property.hasLaundry;
     if (keys.user) data.usr_id = property.user?.id || property.user;
     if (keys.cover) data.pro_cover = property.cover?.id;
-    if (keys.status) data.status = property.status;
+    if (keys.status) data.status = constants.STATES[property.status];
     if (keys.createdAt) data.created_at = property.createdAt;
     if (keys.updatedAt) data.updated_at = property.updatedAt;
 
@@ -79,12 +100,14 @@ exports.formatProperty = property => {
     if (keys.pro_has_laundry) data.hasLaundry = !!property.pro_has_laundry;
     if (keys.usr_id) data.user.id = property.usr_id;
     if (keys.pro_cover) data.cover.id = property.pro_cover;
-    if (keys.status) data.status = property.status;
-    if (keys.created_at) data.createdAt = property.created_at;
-    if (keys.updated_at) data.updatedAt = property.updated_at;
+    if (keys.status) data.status = formatStatus(property.status);
+    if (keys.created_at) data.createdAt = new Date(property.created_at);
+    if (keys.updated_at) data.updatedAt = new Date(property.updated_at);
 
     if (!keys.pro_cover) delete data.cover;
     if (!keys.user) delete data.user;
 
     return data;
 };
+
+exports.formatStatus = formatStatus;
